@@ -16,8 +16,7 @@ jobs:
       - name: Build and deploy artifact to sandbox
 #run the maven deploy lifecycle. The -B indicated a batch process,
 #which reduces the amount of logging the deployment does
-        run: mvn -B deploy -DmuleDeploy -Dusername-${{secrets.PLATFORM_USERNAME}} -Dpassword-${{secrets.PLATFORM_PASSWORD}} -s .maven/settings.xml
-#Pass in the secrets we need for deployment as environment variables
+         #Pass in the secrets we need for deployment as environment variables
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
@@ -26,3 +25,5 @@ jobs:
           SANDBOX_CLIENT_ID: ${{ secrets.SANDBOX_CLIENT_ID }}
           SANDBOX_CLIENT_SECRET: ${{ secrets.SANDBOX_CLIENT_SECRET }}
           BUS_GROUP_ID: ${{ secrets.BUS_GROUP_ID }}
+          
+        run: mvn clean package deploy -DskipTests -DmuleDeploy -Dusername-${{secrets.PLATFORM_USERNAME}} -Dpassword-${{secrets.PLATFORM_PASSWORD}}
