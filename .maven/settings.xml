@@ -3,13 +3,13 @@
   <servers>
     <server>
       <id>MuleRepository</id>
-      <username>${secrets.NEXUS_USERNAME}</username>
-      <password>${secrets.NEXUS_PASSWORD}</password>
+      <username>${env.NEXUS_USERNAME}</username>
+      <password>${env.NEXUS_PASSWORD}</password>
     </server>
     <server>
       <id>anypoint-exchange-v2</id>
-      <username>${secrets.PLATFORM_USERNAME}</username>
-      <password>${secrets.PLATFORM_PASSWORD}</password>
+      <username>${env.PLATFORM_USERNAME}</username>
+      <password>${env.PLATFORM_PASSWORD}</password>
     </server>
   </servers>
   <pluginGroups>
