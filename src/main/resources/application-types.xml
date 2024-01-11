@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="data" format="json">
+      <types:shape format="weave" example="examples/bulkAPIFormate.txt"><![CDATA[%dw 2.0
+
+type data = Array<{|  REGION: String,   COUNTRY: String,   ITEM_TYPE: String,   SALES_CHANNEL: String,   ORDER_PRIORITY: String,   ORDER_DATE: String,   ORDER_ID: String,   SHIP_DATE: String,   UNITS_SOLD: String,   UNIT_PRICE: String,   UNIT_COST: String,   TOTAL_REVENUE: String,   TOTAL_COST: String,   TOTAL_PROFIT: String|}> {"example": "[{\\\"REGION\\\":\\\"south\\\",\\\"COUNTRY\\\":\\\"india\\\",\\\"ITEM_TYPE\\\":\\\"Snacks\\\",\\\"SALES_CHANNEL\\\":\\\"Online\\\",\\\"ORDER_PRIORITY\\\":\\\"C\\\",\\\"ORDER_DATE\\\":\\\"2\\/22\\/2015\\\",\\\"ORDER_ID\\\":\\\"535113847\\\",\\\"SHIP_DATE\\\":\\\"10\\/23\\/2014\\\",\\\"UNITS_SOLD\\\":\\\"934\\\",\\\"UNIT_PRICE\\\":\\\"152.58\\\",\\\"UNIT_COST\\\":\\\"97.44\\\",\\\"TOTAL_REVENUE\\\":\\\"122773.22\\\",\\\"TOTAL_COST\\\":\\\"786562\\\",\\\"TOTAL_PROFIT\\\":\\\"51500.76\\\"},{\\\"REGION\\\":\\\"south\\\",\\\"COUNTRY\\\":\\\"india\\\",\\\"ITEM_TYPE\\\":\\\"Snacks\\\",\\\"SALES_CHANNEL\\\":\\\"Online\\\",\\\"ORDER_PRIORITY\\\":\\\"C\\\",\\\"ORDER_DATE\\\":\\\"2\\/22\\/2015\\\",\\\"ORDER_ID\\\":\\\"535113847\\\",\\\"SHIP_DATE\\\":\\\"10\\/23\\/2014\\\",\\\"UNITS_SOLD\\\":\\\"934\\\",\\\"UNIT_PRICE\\\":\\\"152.58\\\",\\\"UNIT_COST\\\":\\\"97.44\\\",\\\"TOTAL_REVENUE\\\":\\\"122773.22\\\",\\\"TOTAL_COST\\\":\\\"786562\\\",\\\"TOTAL_PROFIT\\\":\\\"51500.76\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#c727433f-fb46-4491-9afc-399655fd07cc"/>
+</types:mule>

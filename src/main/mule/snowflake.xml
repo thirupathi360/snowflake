@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:pubsub="http://www.mulesoft.org/schema/mule/pubsub" xmlns:sdc="http://www.mulesoft.org/schema/mule/sdc"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:snowflake="http://www.mulesoft.org/schema/mule/snowflake" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/snowflake http://www.mulesoft.org/schema/mule/snowflake/current/mule-snowflake.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/sdc http://www.mulesoft.org/schema/mule/sdc/current/mule-sdc.xsd
+http://www.mulesoft.org/schema/mule/pubsub http://www.mulesoft.org/schema/mule/pubsub/current/mule-pubsub.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f465a3ba-3bec-4526-9979-909b0fe944ba" >
+		<http:listener-connection host="0.0.0.0" port="8083" />
+	</http:listener-config>
+	<snowflake:snowflake-config name="Snowflake_Config" doc:name="Snowflake Config" doc:id="bd57a2b2-addd-4d43-b5c0-b4625d2cd582" >
+		<snowflake:snowflake-connection accountName="jdpzvep-fj37188" warehouse="COMPUTE_WH" database="MULEDATA" schema="TEST" user="mahesh" password="Test@123" role="ACCOUNTADMIN" />
+	</snowflake:snowflake-config>
+	<sdc:sdc-config name="Salesforce_CDP_Sdc_config" doc:name="Salesforce CDP Sdc config" doc:id="6632bc20-c5bf-4973-b706-73d7451f281c" >
+		<sdc:oauth-user-pass-connection clientId="3MVG9HB6vm3GZZR8J2TiGKNB7uIM_vl2X6PkpRl9jDpDJMOKPv8FcAQdzKIMZWQ52Scm1gMPfWD3id90kP6C." clientSecret="04105F4942C193B1A8F4F42A8226B05D5C47D1F484AD0715F7708AC9173ECD52" username="thirupathi.masula@cloudodyssey.co" password="Thirupathi@360lQUoKUwj7PFPTwvLyLrndRHz0" audienceUrl="https://login.salesforce.com" />
+	</sdc:sdc-config>
+	<flow name="snowflakeFlow" doc:id="edd278fa-05bc-491a-ac4c-ac6f81d778f3" >
+		<http:listener doc:name="Listener" doc:id="cd9a45a9-b0bd-4bfb-9777-dd35bad36370" config-ref="HTTP_Listener_config" path="/demo"/>
+		<snowflake:update doc:name="Update" doc:id="8e47b640-f1d9-4e1b-b832-51d0aee0cd96" config-ref="Snowflake_Config">
+			<snowflake:sql ><![CDATA[#[payload.sql]
+]]></snowflake:sql>
+		</snowflake:update>
+		<snowflake:update doc:name="hard code" doc:id="8a2f641c-70a1-432c-af7a-4311c874ad75" config-ref="Snowflake_Config">
+			<snowflake:sql ><![CDATA[update SNOWFLAKEDATA 
+set ORDER_PRIORITY ='k' , REGION='EUROPE'
+WHERE ORDER_ID= '100009763' ;]]></snowflake:sql>
+		</snowflake:update>
+		<ee:transform doc:name="Transform Message" doc:id="49a8e3f4-0b8c-44e2-bb69-3b79e6f36bf5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/jSON
+---
+{
+	"MESSAGE": "SUCCESSFULLY UPDATED"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="snowflakeFlow1" doc:id="0745a43d-8684-419e-96dd-6616beac9cfd" >
+		<http:listener doc:name="/demo1" doc:id="87b55ba6-cdc6-484b-9ab1-fd9a80bcd204" config-ref="HTTP_Listener_config" path="/demo1" />
+		<ee:transform doc:name="Transform Message" doc:id="c727433f-fb46-4491-9afc-399655fd07cc" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	REGION: payload.REGION,
+	COUNTRY: payload.COUNTRY,
+	ITEM_TYPE: payload.ITEM_TYPE,
+	SALES_CHANNEL: payload.SALES_CHANNEL,
+	ORDER_PRIORITY: payload.ORDER_PRIORITY,
+	ORDER_DATE: payload.ORDER_DATE,
+	ORDER_ID: payload.ORDER_ID,
+	SHIP_DATE: payload.SHIP_DATE,
+	UNITS_SOLD: payload.UNITS_SOLD,
+	UNIT_PRICE: payload.UNIT_PRICE,
+	UNIT_COST: payload.UNIT_COST,
+	TOTAL_REVENUE: payload.TOTAL_REVENUE,
+	TOTAL_COST: payload.TOTAL_COST,
+	TOTAL_PROFIT: payload.TOTAL_PROFIT
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="8d1f020c-b66d-44ee-83d4-984a0746fad1" message="#[payload]"/>
+		<snowflake:insert doc:name="Insert" doc:id="71e4db96-f908-408c-826a-eb815e1fbc53" config-ref="Snowflake_Config">
+			<snowflake:sql ><![CDATA[insert into DATA(REGION, COUNTRY, ITEM_TYPE ,SALES_CHANNEL ,ORDER_PRIORITY , ORDER_DATE ,ORDER_ID ,SHIP_DATE ,UNITS_SOLD ,UNIT_PRICE ,UNIT_COST ,TOTAL_REVENUE ,TOTAL_COST ,TOTAL_PROFIT ) 
+values(:REGION, :COUNTRY, :ITEM_TYPE ,:SALES_CHANNEL ,:ORDER_PRIORITY , :ORDER_DATE ,:ORDER_ID ,:SHIP_DATE ,:UNITS_SOLD ,:UNIT_PRICE ,:UNIT_COST ,:TOTAL_REVENUE ,:TOTAL_COST ,:TOTAL_PROFIT 
+)
+]]></snowflake:sql>
+			<snowflake:input-parameters ><![CDATA[#[{
+		REGION : payload.REGION,
+	COUNTRY : payload.COUNTRY,
+	ITEM_TYPE : payload.ITEM_TYPE,
+	SALES_CHANNEL : payload.SALES_CHANNEL,
+	ORDER_PRIORITY : payload.ORDER_PRIORITY,
+	ORDER_DATE : payload.ORDER_DATE,
+	ORDER_ID : payload.ORDER_ID,
+	SHIP_DATE : payload.SHIP_DATE,
+	UNITS_SOLD : payload.UNITS_SOLD,
+	UNIT_PRICE : payload.UNIT_PRICE,
+	UNIT_COST : payload.UNIT_COST ,
+	TOTAL_REVENUE : payload.TOTAL_REVENUE ,
+	TOTAL_COST : payload.TOTAL_COST ,
+	TOTAL_PROFIT : payload.TOTAL_PROFIT
+}]]]></snowflake:input-parameters>
+		</snowflake:insert>
+		<ee:transform doc:name="Transform Message" doc:id="2f6e48a8-b178-4dc4-87a6-dfaceab2dc59" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message":"200ok"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="ImplementationFlow" doc:id="9feff02e-801e-4330-a5a5-0c5c02710b04" >
+		<http:listener doc:name="working in other api" doc:id="97bbeb72-00bd-4300-85ac-912ba3f6b54d" config-ref="HTTP_Listener_config" path="/demo3" />
+		<logger level="INFO" doc:name="SnowFlake-logger-flow-started" doc:id="2276e061-799f-41e6-aa55-3aab3ae17820" message="SnowFlake-logger-flow-started" />
+		<snowflake:select doc:name="Retriving data" doc:id="4a77231c-31ea-4d61-8d4d-40c54cbbe48d" config-ref="Snowflake_Config" >
+			<snowflake:sql ><![CDATA[select  EMPLOYEEID, FIRSTNAME, LASTNAME, EmployeeEmail, EMPLOYEETYPE, Role, COMPANY, Location from EMPLOYEETABLE]]></snowflake:sql>
+		</snowflake:select>
+		<logger level="INFO" doc:name="Checking snowflake data" doc:id="e6fd95ae-32ec-469b-ab0e-5c7ae4975a68" message="#[payload]" />
+		<ee:transform doc:name="Mapping fields" doc:id="ad8f8dde-661a-44a1-9c15-673d0caacfc2" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	EmployeeId: payload01.EmployeeId,
+	FirstName: payload01.FirstName,
+	LastName: payload01.LastName,
+	EmployeeEmail: payload01.EmployeeEmail,
+	EmployeeType: payload01.EmployeeType,
+	Company: payload01.Company,
+	Role: payload01.Role,
+	Location: payload01.Location
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="checking mapping data" doc:id="cdd9ae02-43f8-4236-9827-15e6e12359a6" message="#[payload]" />
+		<ee:transform doc:name="data transform" doc:id="cb4e2b6a-48f0-462f-b8aa-2a5a6f7bf3f4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+ { 
+ 	data: payload 
+ 	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<sdc:insert-objects doc:id="16861544-39db-4bb5-b632-624577fed811" config-ref="Salesforce_CDP_Sdc_config" sourceNameUriParam="demo" objectNameUriParam="employeesDetails" doc:name="Insert Records into CDP" />
+	</flow>
+</mule>
