@@ -57,11 +57,14 @@ jobs:
         name: artifacts
     - name: Deploy to Sandbox
       env:
-        USERNAME: ${{ secrets.ANYPOINT_PLATFORM_USERNAME }}
-        PASSWORD: ${{ secrets.ANYPOINT_PLATFORM_USERNAME }}
+        PLATFORM_USERNAME: ${{ secrets.PLATFORM_USERNAME }}
+        PLATFORM_PASSWORD: ${{ secrets.PLATFORM_USERNAME }}
+        NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+        NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
       run: |
         artifactName=$(ls *.jar | head -1)
         mvn deploy -DmuleDeploy \
          -Dmule.artifact=$artifactName \
-         -Danypoint.username="$USERNAME" \
-         -Danypoint.password="$PASSWORD"
+         -Danypoint.username="$PLATFORM_USERNAME" \
+         -Danypoint.password="$PLATFORM_PASSWORD"  \
+         
