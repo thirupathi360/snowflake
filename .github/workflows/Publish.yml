@@ -2,7 +2,7 @@ name: Sandbox - Build and Deploy
 
 on:
   push:
-    branches: main
+    branches: master
 #normally you wouldn't be deploying master branch pushes to Sandbox,
 #but we're keeping things simple! 😁
 
