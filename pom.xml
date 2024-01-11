@@ -40,7 +40,7 @@
 						<muleVersion>4.3.0</muleVersion>
 						<username>${env.PLATFORM_USERNAME}</username>
 						<password>${env.PLATFORM_PASSWORD}</password>
-						<applicationName>hello-world-SOMETHING-UNIQUE</applicationName>
+						<applicationName>snowflake</applicationName>
 						<environment>Sandbox</environment>
 						<workers>1</workers>
 						<workerType>MICRO</workerType>
