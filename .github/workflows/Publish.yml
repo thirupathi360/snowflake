@@ -47,7 +47,7 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - uses: actions/download-artifcat@master
+      - uses: actions/download-artifact@master
         with:
           name: artifacts
       - name: Deploy to Cloudhub Dev env
