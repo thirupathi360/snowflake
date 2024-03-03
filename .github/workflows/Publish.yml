@@ -56,4 +56,4 @@ jobs:
           anypointPassword: ${{ secrets.ANYPOINT_PASSWORD }}
         run: |
           artifactName=$(ls *.jar | head -1)
-          mvn deploy -DmuleDeploy -Dmule.artifactName -Danypoint.username=mskd -Danypoint.Password=Tirupati@360 -DworkerType=MICRO -Dregion=us-east-2 -Denvironment=Sandbox -Dcloudhub.application.name=qwikcilver-app-123
+          mvn deploy -DmuleDeploy -Dmule.artifactName -Danypoint.username=mskd -Danypoint.Password=Tirupati@360 -DworkerType=MICRO -Dregion=us-east-2 -Denvironment=Sandbox -Dcloudhub.application.name=snowflake
