@@ -53,7 +53,16 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	
+    <distributionManagement> 
+        <repository> 
+            <id>bc-repo</id> 
+            <name>Corporate Repository</name> 
+            <url>${exchange.url}</url> 
+            <layout>default</layout> 
+        </repository> 
+    </distributionManagement> 
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.mule.connectors</groupId>
