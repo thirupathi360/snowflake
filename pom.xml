@@ -45,6 +45,7 @@
 					      <region>${region}</region>
 					      <workers>${workers}</workers>
 					      <workerType>${workerType}</workerType>
+					    <groupId>f5b8cc1e-3eb8-45e6-b60a-779668316ef6</groupId>
 					      <properties>
 					        <key>value</key>
 					      </properties>
