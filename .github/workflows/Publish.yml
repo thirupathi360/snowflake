@@ -50,10 +50,10 @@ jobs:
       - uses: actions/download-artifact@master
         with:
           name: artifacts
-      - name: Deploy to Cloudhub Dev env
+      - name: Deploy to Cloudhub Sandbox 
         env:
           anypointUsername: ${{ secrets.ANYPOINT_USERNAME }}
           anypointPassword: ${{ secrets.ANYPOINT_PASSWORD }}
         run: |
           artifactName=$(ls *.jar | head -1)
-          mvn package deploy -DmuleDeploy -Dmule.artifactName -Danypoint.username=mskd -Danypoint.Password=Tirupati@360 -Dmule.version=4.4.0 -DworkerType=MICRO -Dregion=us-east-2 -Denvironment=Sandbox -Dcloudhub.application.name=snowflake
+          mvn deploy -DmuleDeploy -Dmule.artifactName -Danypoint.username=mskd -Danypoint.Password=Tirupati@360 -Dmule.version=4.4.0 -DworkerType=MICRO -Dregion=us-east-2 -Denvironment=Sandbox -Dcloudhub.application.name=snowflake
